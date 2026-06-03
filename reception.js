@@ -1,3 +1,25 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAHlIHqgVULodoo_FP6nkfVZ6fdPF2eRug",
+  authDomain: "ticket-reception-system.firebaseapp.com",
+  projectId: "ticket-reception-system",
+  storageBucket: "ticket-reception-system.firebasestorage.app",
+  messagingSenderId: "506667939598",
+  appId: "1:506667939598:web:62feeca17b54c8f4ac495f",
+  measurementId: "G-2PPZ1SP1MP"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
 const result = document.getElementById("result");
 const visitors = [];
 const scannedTickets = new Set();
@@ -22,36 +44,36 @@ function playSuccessSound() {
 }
 
 
-function onScanSuccess(decodedText) {
+async function onScanSuccess(decodedText) {
 
   try {
     const data = JSON.parse(decodedText);
-    if (scannedTickets.has(data.ticket)) {
 
-      result.textContent =
-        `${data.name} さんは受付済みです`;
+    await saveVisitor(data);
 
-      return;
-    }
-    scannedTickets.add(data.ticket);
-
-    const visitor = {
-      ...data,
-      checkedAt: new Date().toLocaleString("ja-JP")
-    };
-
-    visitors.push(visitor);
-    result.textContent =
-      `受付完了：${data.name} さん`;
+    result.textContent = `受付完了：${data.name} さん`;
     playSuccessSound();
-    console.log(visitors);
-
+    
   } catch (error) {
 
-    result.textContent = "QRコードの形式が不正です";
+    result.textContent = "受付処理に失敗しました";
     console.error(error);
   }
 }
+
+
+async function saveVisitor(data) {
+  const visitor = {
+    ...data,
+    checkedAt: serverTimestamp()
+  };
+
+  await setDoc(
+    doc(db, "events", data.event, "visitors", data.ticketId),
+    visitor
+  );
+};
+
 
 const scanner = new Html5QrcodeScanner(
   "reader",
