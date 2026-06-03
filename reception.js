@@ -1,4 +1,6 @@
 const result = document.getElementById("result");
+const visitors = [];
+const scannedTickets = new Set();
 
 function playSuccessSound() {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -19,10 +21,36 @@ function playSuccessSound() {
   oscillator.stop(audioCtx.currentTime + 0.15);
 }
 
-function onScanSuccess(decodedText) {
-  result.textContent = `読み取り成功：${decodedText}`;
 
-  playSuccessSound();
+function onScanSuccess(decodedText) {
+
+  try {
+    const data = JSON.parse(decodedText);
+    if (scannedTickets.has(data.ticket)) {
+
+      result.textContent =
+        `${data.name} さんは受付済みです`;
+
+      return;
+    }
+    scannedTickets.add(data.ticket);
+
+    const visitor = {
+      ...data,
+      checkedAt: new Date().toLocaleString("ja-JP")
+    };
+
+    visitors.push(visitor);
+    result.textContent =
+      `受付完了：${data.name} さん`;
+    playSuccessSound();
+    console.log(visitors);
+
+  } catch (error) {
+
+    result.textContent = "QRコードの形式が不正です";
+    console.error(error);
+  }
 }
 
 const scanner = new Html5QrcodeScanner(
