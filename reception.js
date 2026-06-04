@@ -1,4 +1,4 @@
-import { app, db } from "./firebase"
+import { app, db } from "./firebase.js"
 import {
   doc,
   setDoc,
