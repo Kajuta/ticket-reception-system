@@ -3,19 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>受付QRスキャン</title>
-  <link rel="stylesheet" href="reception.css">
+  <title>デジタルチケット</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>受付QRスキャン</h1>
+<h1>入場チケット発行</h1>
 
-<div id="reader"></div>
+<form id="ticketForm" class="form-card">
+  <div class="title-banner">会館入場券</div>
 
-<div id="result">QRコードを読み取ってください</div>
+  <label>
+    <span>お名前</span>
+    <input type="text" id="name" required>
+  </label>
 
-<script src="https://unpkg.com/html5-qrcode"></script>
-<script type="module" src="reception.js"></script>
+  <label>
+    <span>所属</span>
+    <select id="group" required>
+      <option value="">選択してください</option>
+      <option>ご友人</option>
+      <option>男子部</option>
+      <option>女性部</option>
+      <option>壮年部</option>
+      <option>学生部</option>
+      <option>未来部</option>
+      <option>他</option>
+    </select>
+  </label>
 
+  <button type="submit" class="main-btn">入場券を表示</button>
+</form>
+
+<div id="ticket" class="ticket hidden">
+  <img src="ticket-bg.png" class="ticket-bg" alt="入場券">
+
+  <div id="ticketDatetime" class="ticket-datetime">
+    <span>2026.6.28 (日) 10:00~12:00</span>
+  </div>
+  <div id="ticketName" class="ticket-name"></div>
+  <div id="ticketGroup" class="ticket-group"></div>
+  <div id="ticketQr" class="ticket-qr">
+    <canvas id="qrcode"></canvas>
+    <span>入場用QRコード</span>
+  </div>
+</div>
+
+<button id="downloadBtn" class="save-btn hidden">画像として保存</button>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
