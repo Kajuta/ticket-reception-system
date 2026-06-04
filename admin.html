@@ -1,0 +1,30 @@
+<h1>来場者管理</h1>
+
+<section class="summary">
+  <div>総来場者数：<span id="totalCount">0</span>人</div>
+</section>
+
+<section>
+  <h2>所属別集計</h2>
+  <ul id="groupSummary"></ul>
+</section>
+
+<section>
+  <h2>来場者一覧</h2>
+  <div class="table-wrapper">
+    <table>
+        <thead>
+        <tr>
+            <th>時刻</th>
+            <th>名前</th>
+            <th>所属</th>
+            <th>チケットID</th>
+        </tr>
+        </thead>
+        <tbody id="visitorTableBody"></tbody>
+    </table>
+  </div>
+  
+</section>
+
+<script type="module" src="admin.js"></script>
