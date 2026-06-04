@@ -50,9 +50,17 @@ function renderGroupSummary(visitors) {
   groupSummary.innerHTML = "";
 
   Object.entries(counts).forEach(([group, count]) => {
-    const li = document.createElement("li");
-    li.textContent = `${group}：${count}人`;
-    groupSummary.appendChild(li);
+    const div = document.createElement("div");
+    div.className = "col-6 col-md-4 col-lg-3";
+
+    div.innerHTML = `
+      <div class="border rounded-3 p-3 text-center bg-light h-100">
+        <div class="text-muted small">${escapeHtml(group)}</div>
+        <div class="fs-2 fw-bold text-primary">${count}</div>
+      </div>
+    `;
+
+    groupSummary.appendChild(div);
   });
 }
 
@@ -77,6 +85,7 @@ function renderVisitorTable(visitors) {
     visitorTableBody.appendChild(tr);
   });
 }
+
 
 function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, (char) => {
