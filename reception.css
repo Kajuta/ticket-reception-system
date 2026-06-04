@@ -21,3 +21,33 @@ body {
   font-size: 18px;
   font-weight: bold;
 }
+
+#reader {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#reader button {
+    background: #0d6efd;
+
+    color: white;
+
+    border: none;
+
+    padding: 12px 20px;
+
+    border-radius: 8px;
+
+    font-weight: 600;
+}
+
+#reader select {
+    min-height: 50px;
+
+    padding: 10px;
+
+    font-size: 1rem;
+
+    border-radius: 8px;
+}
+
