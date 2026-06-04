@@ -1,24 +1,9 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { app, db } from "./firebase"
 import {
-  getFirestore,
   doc,
   setDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAHlIHqgVULodoo_FP6nkfVZ6fdPF2eRug",
-  authDomain: "ticket-reception-system.firebaseapp.com",
-  projectId: "ticket-reception-system",
-  storageBucket: "ticket-reception-system.firebasestorage.app",
-  messagingSenderId: "506667939598",
-  appId: "1:506667939598:web:62feeca17b54c8f4ac495f",
-  measurementId: "G-2PPZ1SP1MP"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 
 const result = document.getElementById("result");
 const visitors = [];
@@ -50,7 +35,7 @@ async function onScanSuccess(decodedText) {
     const data = JSON.parse(decodedText);
 
     await saveVisitor(data);
-
+    
     result.textContent = `受付完了：${data.name} さん`;
     playSuccessSound();
     
@@ -67,12 +52,28 @@ async function saveVisitor(data) {
     ...data,
     checkedAt: serverTimestamp()
   };
+  // 画面表示更新
+  addVisitorToScreen(visitor);
 
+  // Firebaseへ保存
   await setDoc(
     doc(db, "events", data.event, "visitors", data.ticketId),
     visitor
   );
 };
+
+
+function addVisitorToScreen(visitor) {
+  visitors.push(visitor);
+
+  document.getElementById("totalCount").textContent = visitors.length;
+
+  const list = document.getElementById("visitorList");
+
+  const item = document.createElement("li");
+  item.textContent = `${visitor.name} さん（${visitor.group}）`;
+  list.prepend(item);
+}
 
 
 const scanner = new Html5QrcodeScanner(
