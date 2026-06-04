@@ -192,6 +192,9 @@ select {
     text-align: center;
 }
 
+.save-note {
+    font-size: 0.6em;
+}
 
 /* =========================
    スマホ対応
@@ -227,5 +230,8 @@ select {
     padding: 16px;
   }
 
+  .save-note {
+    font-size: 8px;
+  }
 
 }
