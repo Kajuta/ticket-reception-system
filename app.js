@@ -40,13 +40,30 @@ form.addEventListener("submit", function (event) {
 
 });
 
-downloadBtn.addEventListener("click", function () {
-  html2canvas(ticket).then(canvas => {
-    const link = document.createElement("a");
-    link.download = "digital_ticket.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+downloadBtn.addEventListener("click", async function () {
+  const canvas = await html2canvas(ticket, {
+    scale: 2,
+    useCORS: true
   });
+
+  canvas.toBlob(async (blob) => {
+    const file = new File(
+      [blob],
+      "digital_ticket.png",
+      { type: "image/png" }
+    );
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file]
+      });
+    } else {
+      const link = document.createElement("a");
+      link.download = "digital_ticket.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  }, "image/png");
 });
 
 function addTimestamp() {
