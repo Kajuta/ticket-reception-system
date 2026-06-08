@@ -81,7 +81,7 @@ async function saveVisitor(ticketId, data) {
 
   // Firebaseへ保存
   await setDoc(
-    doc(db, "events", data.event, "visitors", data.ticketId),
+    doc(db, "events", data.event, "visitors", visitor.ticketId),
     visitor
   );
 };
