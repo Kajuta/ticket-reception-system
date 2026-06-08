@@ -20,6 +20,34 @@ const visitorsRef = collection(
   "visitors"
 );
 
+const ticketTotalCount = document.getElementById("ticketTotalCount");
+const ticketGroupSummary = document.getElementById("ticketGroupSummary");
+const ticketTableBody = document.getElementById("ticketTableBody");
+
+const ticketsRef = collection(
+  db,
+  "events",
+  eventId,
+  "tickets"
+);
+
+const ticketQuery = query(ticketsRef, orderBy("issuedAt", "desc"));
+
+onSnapshot(ticketQuery, (snapshot) => {
+  const tickets = [];
+
+  snapshot.forEach((doc) => {
+    tickets.push({
+      ticketId: doc.id,
+      ...doc.data()
+    });
+  });
+
+  renderTickets(tickets);
+});
+
+
+
 const q = query(visitorsRef, orderBy("checkedAt", "desc"));
 
 onSnapshot(q, (snapshot) => {
@@ -83,6 +111,66 @@ function renderVisitorTable(visitors) {
     `;
 
     visitorTableBody.appendChild(tr);
+  });
+}
+
+
+function renderTickets(tickets) {
+  ticketTotalCount.textContent = tickets.length;
+
+  renderTicketGroupSummary(tickets);
+  renderTicketTable(tickets);
+}
+
+function renderTicketGroupSummary(tickets) {
+  const counts = {};
+
+  tickets.forEach((ticket) => {
+    const group = ticket.group || "未設定";
+    counts[group] = (counts[group] || 0) + 1;
+  });
+
+  ticketGroupSummary.innerHTML = "";
+
+  Object.entries(counts).forEach(([group, count]) => {
+    const div = document.createElement("div");
+    div.className = "col-6 col-md-4 col-lg-3";
+
+    div.innerHTML = `
+      <div class="border rounded-3 p-3 text-center bg-light h-100">
+        <div class="text-muted small">${escapeHtml(group)}</div>
+        <div class="fs-2 fw-bold text-success">${count}</div>
+      </div>
+    `;
+
+    ticketGroupSummary.appendChild(div);
+  });
+}
+
+function renderTicketTable(tickets) {
+  ticketTableBody.innerHTML = "";
+
+  tickets.forEach((ticket) => {
+    const tr = document.createElement("tr");
+
+    const issuedAt =
+      ticket.issuedAt?.toDate
+        ? ticket.issuedAt.toDate().toLocaleString("ja-JP")
+        : "";
+
+    const usedLabel = ticket.used
+      ? `<span class="badge text-bg-primary">受付済み</span>`
+      : `<span class="badge text-bg-secondary">未受付</span>`;
+
+    tr.innerHTML = `
+      <td>${issuedAt}</td>
+      <td>${escapeHtml(ticket.name || "")}</td>
+      <td>${escapeHtml(ticket.group || "")}</td>
+      <td>${usedLabel}</td>
+      <td>${escapeHtml(ticket.ticketId || "")}</td>
+    `;
+
+    ticketTableBody.appendChild(tr);
   });
 }
 

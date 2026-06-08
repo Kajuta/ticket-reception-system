@@ -8,72 +8,176 @@
     <link rel="stylesheet" href="admin.css">
 </head>
 <body class="bg-light">
-    <div class="container-fluid py-4">
-    <!-- タイトル -->
-    <div class="row mb-4">
-        <div class="col">
-            <h1 class="fw-bold">来場者管理ダッシュボード</h1>
-            <div class="text-muted">
-                KAIKAN OPEN DAY !
-            </div>
-        </div>
-    </div>
-    <!-- 集計エリア -->
-    <div class="row g-3 mb-4">
-        <!-- 総来場者数 -->
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body text-center">
-                    <div class="text-muted mb-2">
-                        総来場者数
+
+    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button
+            class="nav-link active"
+            id="visitors-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#visitors-pane"
+            type="button"
+            role="tab">
+            来場状況
+            </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+            <button
+            class="nav-link"
+            id="tickets-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#tickets-pane"
+            type="button"
+            role="tab">
+            チケット発行状況
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="adminTabsContent">
+
+        <div
+            class="tab-pane fade show active"
+            id="visitors-pane"
+            role="tabpanel">
+
+            <!-- ここに現在の来場者管理画面 -->
+            <div class="container-fluid py-4">
+                <!-- タイトル -->
+                <div class="row mb-4">
+                    <div class="col">
+                        <h1 class="fw-bold">来場者管理ダッシュボード</h1>
+                        <div class="text-muted">
+                            KAIKAN OPEN DAY !
+                        </div>
                     </div>
-                    <div class="display-3 fw-bold text-primary">
-                        <span id="totalCount">0</span>
+                </div>
+                <!-- 集計エリア -->
+                <div class="row g-3 mb-4">
+                    <!-- 総来場者数 -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body text-center">
+                                <div class="text-muted mb-2">
+                                    総来場者数
+                                </div>
+                                <div class="display-3 fw-bold text-primary">
+                                    <span id="totalCount">0</span>
+                                </div>
+                                <div class="fs-5">
+                                    人
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="fs-5">
-                        人
+                    <!-- 所属別 -->
+                    <div class="col-md-8">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-header fw-bold">
+                                所属別集計
+                            </div>
+                            <div class="card-body">
+                                <div
+                                    id="groupSummary"
+                                    class="row g-3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 来場者一覧 -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header fw-bold">
+                        来場者一覧
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>受付時刻</th>
+                                        <th>氏名</th>
+                                        <th>所属</th>
+                                        <th>チケットID</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="visitorTableBody">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!--  -->
+
         </div>
-        <!-- 所属別 -->
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header fw-bold">
-                    所属別集計
+
+        <div
+            class="tab-pane fade"
+            id="tickets-pane"
+            role="tabpanel">
+
+            <!-- ここにチケット発行状況画面 -->
+
+            <div class="container-fluid py-4">
+                <div class="row mb-4">
+                    <div class="col">
+                        <h1 class="fw-bold">来場者管理ダッシュボード</h1>
+                        <div class="text-muted">
+                            KAIKAN OPEN DAY !
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div
-                        id="groupSummary"
-                        class="row g-3">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-header fw-bold">
+                                チケット発行状況
+                            </div>
+
+                            <div class="card-body">
+                                <div class="mb-3">
+                                発行数合計：
+                                <span id="ticketTotalCount" class="fw-bold text-primary">0</span>
+                                件
+                                </div>
+
+                                <div id="ticketGroupSummary" class="row g-3 mb-4"></div>
+
+                                <div class="table-responsive">
+                                <table class="table table-striped table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>発行日時</th>
+                                        <th>氏名</th>
+                                        <th>所属</th>
+                                        <th>使用済み</th>
+                                        <th>チケットID</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="ticketTableBody"></tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!--  -->
+
         </div>
     </div>
-    <!-- 来場者一覧 -->
-    <div class="card shadow-sm border-0">
-        <div class="card-header fw-bold">
-            来場者一覧
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>受付時刻</th>
-                            <th>氏名</th>
-                            <th>所属</th>
-                            <th>チケットID</th>
-                        </tr>
-                    </thead>
-                    <tbody id="visitorTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    </div>
+
+
+
+
+
+
+
+
+    
     <script type="module" src="admin.js"></script>
 </body>
 </html>
