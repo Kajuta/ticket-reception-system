@@ -1,7 +1,5 @@
 import { app, db } from "./firebase.js"
 import {
-  getFirestore,
-  doc,
   addDoc,
   collection,
   serverTimestamp
