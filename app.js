@@ -1,3 +1,12 @@
+import { app, db } from "./firebase.js"
+import {
+  getFirestore,
+  doc,
+  addDoc,
+  collection,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
 const form = document.getElementById("ticketForm");
 const ticket = document.getElementById("ticket");
 const downloadBtn = document.getElementById("downloadBtn");
@@ -24,11 +33,12 @@ form.addEventListener("submit", function (event) {
     event: "kaikan-openday-260628",
     name: name,
     group: group,
-    ticketId: crypto.randomUUID(),
-    issuedAt: addTimestamp()
+    used: "false"
   }
 
-  QRCode.toCanvas(qrBox, JSON.stringify(data), {
+  const ticketId = await saveTicket(data);
+
+  QRCode.toCanvas(qrBox, ticketId, {
     width: 300,
     margin: 1,
     errorCorrectionLevel: "M",
@@ -65,6 +75,27 @@ downloadBtn.addEventListener("click", async function () {
     }
   }, "image/png");
 });
+
+
+async function saveTicket(data) {
+  const ticket = {
+    ...data,
+    issuedAt: serverTimestamp()
+  };
+
+  // Firebaseへ保存
+  const docRef = await addDoc(
+    collection(
+      db, 
+      "events",
+      "kaikan-openday-260628",
+      "tickets"
+    ),
+    ticket
+  );
+  return docRef.id;
+}
+
 
 function addTimestamp() {
     const now = new Date()
