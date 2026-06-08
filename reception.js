@@ -2,6 +2,7 @@ import { app, db } from "./firebase.js"
 import {
   doc,
   setDoc,
+  getDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -32,7 +33,22 @@ function playSuccessSound() {
 async function onScanSuccess(decodedText) {
 
   try {
-    const data = JSON.parse(decodedText);
+    const ticketId = decodedText
+    const docRef = doc(
+      db,
+      "events",
+      "kaikan-openday-260628",
+      "tickets",
+      ticketId
+    );
+    const snapshot = await getDoc(docRef);
+
+    if (!snapshot.exists()){
+      result.textContent = "データが存在しません"
+      return;
+    }
+
+    const data = snapshot.data();
 
     await saveVisitor(data);
     
