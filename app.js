@@ -11,7 +11,7 @@ const form = document.getElementById("ticketForm");
 const ticket = document.getElementById("ticket");
 const downloadBtn = document.getElementById("downloadBtn");
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const name = document.getElementById("name").value;
@@ -26,8 +26,8 @@ form.addEventListener("submit", function (event) {
 
   qrBox.innerHTML = "";
 
-//   const data = ["260628", name, group, addTimestamp()];
-//   const dataStr = data.join("|");
+  //   const data = ["260628", name, group, addTimestamp()];
+  //   const dataStr = data.join("|");
 
   const data = {
     event: "kaikan-openday-260628",
