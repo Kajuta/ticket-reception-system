@@ -50,7 +50,14 @@ async function onScanSuccess(decodedText) {
 
     const data = snapshot.data();
 
-    await saveVisitor(data);
+    if(scannedTickets.has(ticketId)) {
+      result.textContent = `${data.name} さんは受付済みです`;
+      return;
+    }
+
+    scannedTickets.add(ticketId);
+
+    await saveVisitor(ticketId, data);
     
     result.textContent = `受付完了：${data.name} さん`;
     playSuccessSound();
@@ -63,9 +70,10 @@ async function onScanSuccess(decodedText) {
 }
 
 
-async function saveVisitor(data) {
+async function saveVisitor(ticketId, data) {
   const visitor = {
     ...data,
+    ticketId:ticketId,
     checkedAt: serverTimestamp()
   };
   // 画面表示更新
