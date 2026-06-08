@@ -31,7 +31,7 @@ form.addEventListener("submit", async function (event) {
     event: "kaikan-openday-260628",
     name: name,
     group: group,
-    used: "false"
+    used: false
   }
 
   const ticketId = await saveTicket(data);

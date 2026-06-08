@@ -50,12 +50,12 @@ async function onScanSuccess(decodedText) {
 
     const data = snapshot.data();
 
-    if(scannedTickets.has(ticketId)) {
+    if(data.used === true) {
       result.textContent = `${data.name} さんは受付済みです`;
       return;
     }
 
-    scannedTickets.add(ticketId);
+    data.used = true;
 
     await saveVisitor(ticketId, data);
     
@@ -79,10 +79,19 @@ async function saveVisitor(ticketId, data) {
   // 画面表示更新
   addVisitorToScreen(visitor);
 
-  // Firebaseへ保存
+  // FirebaseへVisitorを保存
   await setDoc(
     doc(db, "events", data.event, "visitors", visitor.ticketId),
     visitor
+  );
+  // ticket情報を更新
+  await setDoc(
+    doc(db, "events", data.event, "tickets", visitor.ticketId),{
+      ...data,
+      used: true,
+      checkedAt: serverTimestamp()
+    },
+    { merge: true}
   );
 };
 
